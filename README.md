@@ -11,8 +11,8 @@ This repository contains a [MXNet](https://github.com/apache/incubator-mxnet) im
 ## Train and Test
 
 - Modify ```config/cfg.py``` by your setting
-- >python train.py
-- >python test.py
+- ```python train.py```
+- ```python test.py```
 
 ## Reference
 [1] Kaiming He, et al. "Identity Mappings in Deep Residual Networks" arXiv:1603.05027 (2016).
