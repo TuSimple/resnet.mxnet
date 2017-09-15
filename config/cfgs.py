@@ -1,3 +1,4 @@
+# mxnet version: https://github.com/huangzehao/incubator-mxnet-bk
 mxnet_path = '../incubator-mxnet/python/'
 gpu_list = [0, 1, 2, 3]
 dataset = "imagenet"
@@ -5,13 +6,14 @@ model_prefix = "resnext50"
 network = "resnext"
 depth = 50
 model_load_prefix = model_prefix
-model_load_epoch = 100
+model_load_epoch = 0
 retrain = False
 
 # data
 data_dir = '/home/hzh/imagenet_data_new/'
-batch_size = 128
-kv_store = 'local'
+batch_size = 32
+batch_size *= len(gpu_list)
+kv_store = 'device'
 
 # optimizer
 lr = 0.1
@@ -22,9 +24,10 @@ if dataset == "imagenet":
 else:
     lr_step = [120, 160, 240]
 lr_factor = 0.1
-begin_epoch = 0
+begin_epoch = model_load_epoch if retrain else 0
 num_epoch = 100
 frequent = 50
+
 # network config
 if dataset == "imagenet":
     num_classes = 1000

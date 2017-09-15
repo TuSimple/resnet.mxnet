@@ -34,8 +34,9 @@ def imagenet_iterator(data_dir, batch_size, kv):
             inter_method        = 2,
             rand_mirror         = True,
             shuffle             = True,
+            shuffle_chunk_size  = 4096,
             preprocess_threads  = 8,
-            prefetch_buffer     = 4,
+            prefetch_buffer     = 16,
             num_parts           = kv.num_workers,
             part_index          = kv.rank)
     

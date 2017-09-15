@@ -26,6 +26,10 @@ def main(config):
     formatter = logging.Formatter('%(name)s %(levelname)s %(message)s')
     console.setFormatter(formatter)
     logging.getLogger('').addHandler(console)
+    # model folder
+    model_dir = "./model"
+    if not os.path.exists(model_dir):
+        os.mkdir(model_dir)
 
     # set up environment
     devs = [mx.gpu(int(i)) for i in config.gpu_list]
