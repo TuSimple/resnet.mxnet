@@ -4,7 +4,7 @@ import config
 sys.path.insert(0, config.mxnet_path)
 import mxnet as mx
 
-eps = 1e-5 + 1e-10
+eps = 1e-5
 
 
 def residual_unit(data, num_filter, stride, dim_match, name, bottle_neck=True,
