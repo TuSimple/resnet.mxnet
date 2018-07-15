@@ -59,7 +59,7 @@ def main(config):
     elif config.network == 'vgg16' or config.network == 'mobilenet' or config.network == 'shufflenet':
         symbol = eval(config.network)(num_classes=config.num_classes)
 
-    mx.viz.print_summary(symbol, {'data': (1, 3, 224, 224)})
+    # mx.viz.print_summary(symbol, {'data': (1, 3, 224, 224)})
 
     # train
     epoch_size = max(int(num_examples / config.batch_size / kv.num_workers), 1)
