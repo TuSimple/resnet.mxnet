@@ -95,8 +95,8 @@ class Solver(object):
             data_iter = iter(train_data)
             end_of_batch = False
             next_data_batch = next(data_iter)
-            # while not end_of_batch:
-            while temp_count <= 1000:
+            while not end_of_batch:
+            # while temp_count <= 1000:
                 # ndarray.waitall()
                 start_time = time.time()
                 data_batch = next_data_batch
@@ -146,24 +146,24 @@ class Solver(object):
                 nbatch += 1
                 temp_count += 1
 
-            # for name, val in eval_metric.get_name_value():
-            #     self.logger.info('Epoch[%d] Train-%s=%f', epoch, name, val)
-            # toc = time.time()
-            # self.logger.info('Epoch[%d] Time cost=%.3f', epoch, (toc - tic))
-            #
-            # arg_params, aux_params = self.module.get_params()
-            # self.module.set_params(arg_params, aux_params)
-            #
-            # if epoch_end_callback is not None:
-            #     for callback in _as_list(epoch_end_callback):
-            #         callback(epoch, self.symbol, arg_params, aux_params)
-            # if eval_data:
-            #     res = self.module.score(eval_data, validate_metric,
-            #                             score_end_callback=None,
-            #                             batch_end_callback=None,
-            #                             reset=True,
-            #                             epoch=epoch)
-            #     for name, val in res:
-            #         self.logger.info('Epoch[%d] Validation-%s=%f', epoch, name, val)
-            #
-            # train_data.reset()
+            for name, val in eval_metric.get_name_value():
+                self.logger.info('Epoch[%d] Train-%s=%f', epoch, name, val)
+            toc = time.time()
+            self.logger.info('Epoch[%d] Time cost=%.3f', epoch, (toc - tic))
+
+            arg_params, aux_params = self.module.get_params()
+            self.module.set_params(arg_params, aux_params)
+
+            if epoch_end_callback is not None:
+                for callback in _as_list(epoch_end_callback):
+                    callback(epoch, self.symbol, arg_params, aux_params)
+            if eval_data:
+                res = self.module.score(eval_data, validate_metric,
+                                        score_end_callback=None,
+                                        batch_end_callback=None,
+                                        reset=True,
+                                        epoch=epoch)
+                for name, val in res:
+                    self.logger.info('Epoch[%d] Validation-%s=%f', epoch, name, val)
+
+            train_data.reset()
