@@ -1,7 +1,8 @@
 import logging, os
 import sys
 
-import config
+# import config
+from config.edict_config import config
 
 sys.path.insert(0, config.mxnet_path)
 import mxnet as mx
@@ -10,6 +11,7 @@ from core.solver import Solver
 from data import *
 from symbol import *
 
+import pprint
 
 def main(config):
     # log file
@@ -56,6 +58,8 @@ def main(config):
                                       bottle_neck=config.bottle_neck)
     elif config.network == 'vgg16' or config.network == 'mobilenet' or config.network == 'shufflenet':
         symbol = eval(config.network)(num_classes=config.num_classes)
+
+    mx.viz.print_summary(symbol, {'data': (1, 3, 224, 224)})
 
     # train
     epoch_size = max(int(num_examples / config.batch_size / kv.num_workers), 1)
@@ -106,4 +110,5 @@ def main(config):
 
 
 if __name__ == '__main__':
+    pprint.pprint(config)
     main(config)
