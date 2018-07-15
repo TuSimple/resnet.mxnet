@@ -26,7 +26,7 @@ else:
 lr_factor = 0.1
 begin_epoch = model_load_epoch if retrain else 0
 num_epoch = 100
-frequent = 50
+frequent = 20
 
 # network config
 if dataset == "imagenet":
