@@ -95,8 +95,8 @@ class Solver(object):
             data_iter = iter(train_data)
             end_of_batch = False
             next_data_batch = next(data_iter)
-            while not end_of_batch:
-            # while temp_count <= 1000:
+            # while not end_of_batch:
+            while temp_count <= 1000:
                 # ndarray.waitall()
                 start_time = time.time()
                 data_batch = next_data_batch
