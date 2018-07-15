@@ -1,6 +1,6 @@
 # mxnet version: https://github.com/huangzehao/incubator-mxnet-bk
-mxnet_path = '../incubator-mxnet/python/'
-gpu_list = [0, 1, 2, 3]
+mxnet_path = '../mxnet/python/'
+gpu_list = [0, 1, 2, 3, 4, 5, 6, 7]
 dataset = "imagenet"
 model_prefix = "resnext50"
 network = "resnext"
@@ -10,7 +10,7 @@ model_load_epoch = 0
 retrain = False
 
 # data
-data_dir = '/home/hzh/imagenet_data_new/'
+data_dir = '/data/ILSVRC2012'
 batch_size = 32
 batch_size *= len(gpu_list)
 kv_store = 'device'
