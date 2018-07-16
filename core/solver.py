@@ -1,10 +1,6 @@
 import time
 import logging
-import sys
 
-import config
-
-sys.path.insert(0, config.mxnet_path)
 import mxnet as mx
 from mxnet.module import Module
 from mxnet import metric
