@@ -75,7 +75,7 @@ def main(config):
         lr_iters = [int(epoch * epoch_size) for epoch in lr_epoch_diff]
         print 'lr', lr, 'lr_epoch_diff', lr_epoch_diff, 'lr_iters', lr_iters
         print 'warmup lr', config.warmup_lr, 'warm_epoch', config.warm_epoch, 'warm_step', int(config.warm_epoch * epoch_size)
-        lr_scheduler = WarmupMultiFactorScheduler(step=lr_iters, factor=config.lr_factor,
+        lr_scheduler = WarmupMultiFactorScheduler(base_lr=lr, step=lr_iters, factor=config.lr_factor,
                                                   warmup=True, warmup_type='gradual',
                                                   warmup_lr=config.warmup_lr, warmup_step=int(config.warm_epoch * epoch_size))
     elif config.lr_step is not None:

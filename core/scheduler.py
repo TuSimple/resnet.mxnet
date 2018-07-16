@@ -7,9 +7,12 @@ def multi_factor_scheduler(begin_epoch, epoch_size, step, factor=0.1):
     return mx.lr_scheduler.MultiFactorScheduler(step=step_, factor=factor) if len(step_) else None
 
 class WarmupMultiFactorScheduler(LRScheduler):
-    def __init__(self, step, factor=1, warmup=False, warmup_type='constant', warmup_lr=0, warmup_step=0):
+    def __init__(self, base_lr, step, factor=1, warmup=False, warmup_type='constant', warmup_lr=0, warmup_step=0):
         super(WarmupMultiFactorScheduler, self).__init__()
         assert isinstance(step, list) and len(step) >= 1
+
+        self.base_lr = base_lr
+
         for i, _step in enumerate(step):
             if i != 0 and step[i] <= step[i-1]:
                 raise ValueError("Schedule step must be an increasing integer list")
