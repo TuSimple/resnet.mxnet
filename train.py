@@ -65,6 +65,11 @@ def main(config):
 
     # train
     epoch_size = max(int(num_examples / config.batch_size / kv.num_workers), 1)
+    if 'dist' in config.kv_store and not 'async' in config.kv_store:
+        logging.info('Resizing training data to %d batches per machine', epoch_size)
+        # resize train iter to ensure each machine has same number of batches per epoch
+        # if not, dist_sync can hang at the end with one machine waiting for other machines
+        train = mx.io.ResizeIter(train, epoch_size)
 
     if config.warmup is not None and config.warmup is True:
         lr_epoch = [int(epoch) for epoch in config.lr_step.split(',')]
