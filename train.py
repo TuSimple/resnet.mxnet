@@ -12,6 +12,8 @@ from data import *
 from symbol import *
 
 import pprint
+from core.scheduler import WarmupMultiFactorScheduler
+
 
 def main(config):
     # log file
@@ -63,7 +65,18 @@ def main(config):
 
     # train
     epoch_size = max(int(num_examples / config.batch_size / kv.num_workers), 1)
-    if config.lr_step is not None:
+
+    if config.warmup is not None and config.warmup is True:
+        lr_epoch = [int(epoch) for epoch in config.lr_step.split(',')]
+        lr_epoch_diff = [epoch - config.begin_epoch for epoch in lr_epoch if epoch > config.begin_epoch]
+        lr = config.lr * (config.lr_factor ** (len(lr_epoch) - len(lr_epoch_diff)))
+        lr_iters = [int(epoch * epoch_size) for epoch in lr_epoch_diff]
+        print 'lr', lr, 'lr_epoch_diff', lr_epoch_diff, 'lr_iters', lr_iters
+        print 'warmup lr', config.warmup_lr, 'warm_epoch', config.warm_epoch, 'warm_step', int(config.warm_epoch * epoch_size)
+        lr_scheduler = WarmupMultiFactorScheduler(step=lr_iters, factor=config.lr_factor,
+                                                  warmup=True, warmup_type='gradual',
+                                                  warmup_lr=config.warmup_lr, warmup_step=int(config.warm_epoch * epoch_size))
+    elif config.lr_step is not None:
         lr_scheduler = multi_factor_scheduler(config.begin_epoch, epoch_size, step=config.lr_step,
                                               factor=config.lr_factor)
     else:

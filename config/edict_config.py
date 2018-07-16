@@ -31,6 +31,12 @@ config.lr_factor = 0.1
 config.begin_epoch = config.model_load_epoch if config.retrain else 0
 config.num_epoch = 100
 config.frequent = 20
+# for distributed training
+config.warmup = True
+config.warmup_lr = 0.1
+config.warm_epoch = 5
+
+
 
 # network config
 if config.dataset == "imagenet":
