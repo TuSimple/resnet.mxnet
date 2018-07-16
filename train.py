@@ -69,7 +69,7 @@ def main(config):
         train = mx.io.ResizeIter(train, epoch_size)
 
     if config.warmup is not None and config.warmup is True:
-        lr_epoch = [int(epoch) for epoch in config.lr_step.split(',')]
+        lr_epoch = [int(epoch) for epoch in config.lr_step]
         lr_epoch_diff = [epoch - config.begin_epoch for epoch in lr_epoch if epoch > config.begin_epoch]
         lr = config.lr * (config.lr_factor ** (len(lr_epoch) - len(lr_epoch_diff)))
         lr_iters = [int(epoch * epoch_size) for epoch in lr_epoch_diff]
