@@ -1,10 +1,7 @@
 import logging, os
-import sys
 
 # import config
 from config.edict_config import config
-
-sys.path.insert(0, config.mxnet_path)
 import mxnet as mx
 from core.scheduler import multi_factor_scheduler
 from core.solver import Solver
