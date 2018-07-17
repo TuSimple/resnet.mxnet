@@ -5,13 +5,13 @@ import config
 sys.path.insert(0, config.mxnet_path)
 import mxnet as mx
 
-def imagenet_iterator(data_dir, batch_size, kv):
+def imagenet_iterator(data_dir, batch_size, kv, image_shape):
     train = mx.io.ImageRecordIter(
             path_imgrec         = os.path.join(data_dir, "train.rec"),
             label_width         = 1,
             data_name           = 'data',
             label_name          = 'softmax_label',
-            data_shape          = (3, 224, 224),
+            data_shape          = image_shape,
             batch_size          = batch_size,
             pad                 = 0,
             fill_value          = 127,

@@ -20,7 +20,7 @@ config.batch_size *= len(config.gpu_list)
 config.kv_store = 'dist_sync'
 
 # optimizer
-config.lr = 0.4
+config.lr = 0.2
 config.wd = 0.0001
 config.momentum = 0.9
 if config.dataset == "imagenet":
@@ -35,6 +35,8 @@ config.frequent = 20
 config.warmup = True
 config.warmup_lr = 0.1
 config.warm_epoch = 5
+# set image_shape for io and network
+config.image_shape = [3, 320, 320]
 
 
 

@@ -40,12 +40,13 @@ def main(config):
     # iterator
     train, val, num_examples = imagenet_iterator(data_dir=config.data_dir,
                                                  batch_size=config.batch_size,
-                                                 kv=kv)
+                                                 kv=kv,
+                                                 image_shape=tuple(config.image_shape))
     print train
     print val
     data_names = ('data',)
     label_names = ('softmax_label',)
-    data_shapes = [('data', (config.batch_size, 3, 320, 320))]
+    data_shapes = [('data', tuple([config.batch_size] + config.image_shape))]
     label_shapes = [('softmax_label', (config.batch_size,))]
 
     if config.network == 'resnet' or config.network == 'resnext':
