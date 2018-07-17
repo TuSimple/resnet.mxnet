@@ -45,7 +45,7 @@ def main(config):
     print val
     data_names = ('data',)
     label_names = ('softmax_label',)
-    data_shapes = [('data', (config.batch_size, 3, 224, 224))]
+    data_shapes = [('data', (config.batch_size, 3, 320, 320))]
     label_shapes = [('softmax_label', (config.batch_size,))]
 
     if config.network == 'resnet' or config.network == 'resnext':

@@ -15,7 +15,7 @@ config.retrain = False
 
 # data
 config.data_dir = '/data/ILSVRC2012'
-config.batch_size = 32
+config.batch_size = 16
 config.batch_size *= len(config.gpu_list)
 config.kv_store = 'dist_sync'
 
