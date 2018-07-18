@@ -15,7 +15,7 @@ config.retrain = False
 
 # data
 config.data_dir = '/data/ILSVRC2012'
-config.batch_size = 16
+config.batch_size = 32
 config.batch_size *= len(config.gpu_list)
 config.kv_store = 'dist_sync'
 
@@ -36,7 +36,7 @@ config.warmup = True
 config.warmup_lr = 0.1
 config.warm_epoch = 5
 # set image_shape for io and network
-config.image_shape = [3, 320, 320]
+config.image_shape = [3, 224, 224]
 
 
 
