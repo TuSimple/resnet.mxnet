@@ -49,7 +49,7 @@ def main(config):
     data_shapes = [('data', tuple([config.batch_size] + config.image_shape))]
     label_shapes = [('softmax_label', (config.batch_size,))]
 
-    if config.network == 'resnet' or config.network == 'resnext':
+    if config.network == 'resnet' or config.network == 'resnext' or config.network == 'resnext_cyt':
         symbol = eval(config.network)(units=config.units,
                                       num_stage=config.num_stage,
                                       filter_list=config.filter_list,
