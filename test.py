@@ -14,7 +14,8 @@ def main(config):
     kv = mx.kvstore.create(config.kv_store)
     _, val, _ = imagenet_iterator(data_dir=config.data_dir,
                                   batch_size=config.batch_size,
-                                  kv=kv)
+                                  kv=kv,
+                                  image_shape=tuple(config.image_shape))
     print model.score(val)
 
 
