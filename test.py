@@ -1,8 +1,8 @@
 import os
 import sys
-import config
+# import config
+from config.edict_config import config
 
-sys.path.insert(0, config.mxnet_path)
 import mxnet as mx
 from data import imagenet_iterator
 
