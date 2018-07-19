@@ -45,7 +45,7 @@ def imagenet_iterator(data_dir, batch_size, kv, image_shape):
             label_width         = 1,
             data_name           = 'data',
             label_name          = 'softmax_label',
-            resize              = 256,
+            resize              = 352,
             batch_size          = batch_size,
             data_shape          = image_shape,
             mean_r              = 123.68,
