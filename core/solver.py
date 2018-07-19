@@ -150,7 +150,7 @@ class Solver(object):
             arg_params, aux_params = self.module.get_params()
             self.module.set_params(arg_params, aux_params)
 
-            if epoch_end_callback is not None:
+            if epoch_end_callback is not None and kvstore.rank == 0:
                 for callback in _as_list(epoch_end_callback):
                     callback(epoch, self.symbol, arg_params, aux_params)
             if eval_data:
