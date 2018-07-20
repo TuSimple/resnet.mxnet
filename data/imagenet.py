@@ -41,10 +41,12 @@ class SyntheticDataIter(DataIter):
 
 
 def imagenet_iterator(data_dir, batch_size, kv, image_shape):
+    num_examples = 1281167
+
     if config.benchmark is not None and config.benchmark is True:
         data_shape = (batch_size,) + image_shape
         train = SyntheticDataIter(config.num_classes, data_shape, 500, np.float32)
-        return (train, None)
+        return (train, None, num_examples)
 
     train = mx.io.ImageRecordIter(
             path_imgrec         = os.path.join(data_dir, "train.rec"),
@@ -100,6 +102,5 @@ def imagenet_iterator(data_dir, batch_size, kv, image_shape):
             rand_mirror         = False,
             num_parts           = kv.num_workers,
             part_index          = kv.rank)
-    
-    num_examples = 1281167
+
     return train, val, num_examples
