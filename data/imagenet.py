@@ -45,7 +45,7 @@ def imagenet_iterator(data_dir, batch_size, kv, image_shape):
 
     if config.benchmark is not None and config.benchmark is True:
         data_shape = (batch_size,) + image_shape
-        train = SyntheticDataIter(config.num_classes, data_shape, 500, np.float32)
+        train = SyntheticDataIter(config.num_classes, data_shape, 5005, np.float32)
         return (train, None, num_examples)
 
     train = mx.io.ImageRecordIter(
