@@ -56,6 +56,7 @@ def main(config):
                                       filter_list=config.filter_list,
                                       num_classes=config.num_classes,
                                       data_type=config.dataset,
+                                      num_group=config.num_group,
                                       bottle_neck=config.bottle_neck)
     elif config.network == 'vgg16' or config.network == 'mobilenet' or config.network == 'shufflenet':
         symbol = eval(config.network)(num_classes=config.num_classes)
