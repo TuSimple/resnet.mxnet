@@ -9,14 +9,18 @@ eps = 1e-5
 
 def xresidual_unit(data, num_filter, stride, dim_match, name, bottle_neck=True,
                    num_group=32, bn_mom=0.9, workspace=256, memonger=False):
+    if num_group == 32:
+        multip_factor = 0.5
+    elif num_group == 64:
+        multip_factor = 1.0
     if bottle_neck:
-        conv1 = mx.sym.Convolution(data=data, num_filter=int(num_filter * 0.5), kernel=(1, 1), stride=(1, 1),
+        conv1 = mx.sym.Convolution(data=data, num_filter=int(num_filter * multip_factor), kernel=(1, 1), stride=(1, 1),
                                    pad=(0, 0),
                                    no_bias=True, workspace=workspace, name=name + '_conv1')
         bn1 = mx.sym.BatchNorm(data=conv1, fix_gamma=False, eps=eps, momentum=bn_mom, name=name + '_bn1')
         act1 = mx.sym.Activation(data=bn1, act_type='relu', name=name + '_relu1')
 
-        conv2 = mx.sym.Convolution(data=act1, num_filter=int(num_filter * 0.5), num_group=num_group, kernel=(3, 3),
+        conv2 = mx.sym.Convolution(data=act1, num_filter=int(num_filter * multip_factor), num_group=num_group, kernel=(3, 3),
                                    stride=stride, pad=(1, 1),
                                    no_bias=True, workspace=workspace, name=name + '_conv2')
         bn2 = mx.sym.BatchNorm(data=conv2, fix_gamma=False, eps=eps, momentum=bn_mom, name=name + '_bn2')
