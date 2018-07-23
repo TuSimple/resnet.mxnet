@@ -3,7 +3,7 @@ import config
 
 sys.path.insert(0, config.mxnet_path)
 import mxnet as mx
-
+import numpy as np
 eps = 1e-5
 
 
@@ -75,7 +75,11 @@ def resnext(units, num_stage, filter_list, num_classes, data_type, num_group=32,
     assert (num_unit == num_stage)
 
     data = mx.sym.Variable(name='data')
-    data = mx.sym.Variable(name='data')
+    if data_type == 'float32':
+        data = mx.sym.identity(data=data, name='id')
+    elif data_type == 'float16':
+        data = mx.sym.Cast(data=data, dtype=np.float16)
+
     conv1_1 = mx.sym.Convolution(data=data, num_filter=filter_list[0], kernel=(3, 3), stride=(1, 1), pad=(1, 1),
                                  no_bias=True, name="conv1_1", workspace=workspace)
     conv1_1 = mx.sym.BatchNorm(data=conv1_1, fix_gamma=False, eps=eps, momentum=bn_mom, name='bn1_1')

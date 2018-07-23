@@ -39,6 +39,7 @@ config.warm_epoch = 5
 config.image_shape = [3, 224, 224]
 config.benchmark = True
 config.num_group = 32
+config.data_type = 'float32'
 
 
 

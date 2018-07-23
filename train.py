@@ -55,7 +55,7 @@ def main(config):
                                       num_stage=config.num_stage,
                                       filter_list=config.filter_list,
                                       num_classes=config.num_classes,
-                                      data_type=config.dataset,
+                                      data_type=config.data_type,
                                       num_group=config.num_group,
                                       bottle_neck=config.bottle_neck)
     elif config.network == 'vgg16' or config.network == 'mobilenet' or config.network == 'shufflenet':
