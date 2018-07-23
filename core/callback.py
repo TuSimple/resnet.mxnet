@@ -1,5 +1,23 @@
 import time
 import logging
+from collections import namedtuple
+
+BatchEndParam = namedtuple('BatchEndParams',
+                          ['epoch',
+                           'nbatch',
+                           'eval_metric',
+                           'locals',
+                           'rank',
+                           'total_iter',
+                           'cur_data_time',
+                           'avg_data_time',
+                           'cur_batch_time',
+                           'avg_batch_time',
+                           'cur_kvstore_sync_time',
+                           'avg_kvstore_sync_time',
+                           'cur_iter_total_time',
+                           'avg_iter_total_time'
+                           ])
 
 class DetailSpeedometer(object):
     """Logs training speed and evaluation metrics periodically.
