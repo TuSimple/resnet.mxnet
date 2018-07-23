@@ -57,7 +57,7 @@ def imagenet_iterator(data_dir, batch_size, kv, image_shape):
             batch_size          = batch_size,
             pad                 = 0,
             fill_value          = 127,
-            facebook_aug        = True,
+            random_resized_crop = True,
             max_random_area     = 1.0,
             min_random_area     = 0.08,
             max_aspect_ratio    = 4.0 / 3.0,
