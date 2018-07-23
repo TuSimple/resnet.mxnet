@@ -83,5 +83,7 @@ def resnet(units, num_stage, filter_list, num_classes, data_type, bottle_neck=Tr
     pool1 = mx.symbol.Pooling(data=relu1, global_pool=True, kernel=(7, 7), pool_type='avg', name='pool1')
     flat = mx.symbol.Flatten(data=pool1)
     fc1 = mx.symbol.FullyConnected(data=flat, num_hidden=num_classes, name='fc1')
+    if data_type == 'float16':
+        fc1 = mx.sym.Cast(data=fc1, dtype=np.float32)
     cls = mx.symbol.SoftmaxOutput(data=fc1, name='softmax')
     return cls
