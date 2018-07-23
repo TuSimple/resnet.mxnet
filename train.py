@@ -5,6 +5,7 @@ from config.edict_config import config
 import mxnet as mx
 from core.scheduler import multi_factor_scheduler
 from core.solver import Solver
+from core.callback import DetailSpeedometer
 from data import *
 from symbol import *
 
@@ -103,7 +104,8 @@ def main(config):
                     logger=logging,
                     context=devs)
     epoch_end_callback = mx.callback.do_checkpoint("./model/" + config.model_prefix)
-    batch_end_callback = mx.callback.Speedometer(config.batch_size, config.frequent)
+    # batch_end_callback = mx.callback.Speedometer(config.batch_size, config.frequent)
+    batch_end_callback = DetailSpeedometer(config.batch_size, config.frequent)
     initializer = mx.init.Xavier(rnd_type='gaussian', factor_type='in', magnitude=2)
     arg_params = None
     aux_params = None
