@@ -55,7 +55,7 @@ def residual_unit(data, num_filter, stride, dim_match, name, bottle_neck=True,
 
 
 def resnet(units, num_stage, filter_list, num_classes, data_type, bottle_neck=True,
-           bn_mom=0.9, workspace=512, memonger=False):
+           bn_mom=0.9, workspace=512, memonger=False, num_group=None):
     num_unit = len(units)
     assert (num_unit == num_stage)
 

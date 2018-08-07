@@ -4,23 +4,23 @@ config = edict()
 
 # mxnet version: https://github.com/huangzehao/incubator-mxnet-bk
 config.mxnet_path = '../mxnet/python/'
-config.gpu_list = [0, 1, 2, 3, 4, 5, 6, 7]
+config.gpu_list = [2, 3]
 config.dataset = "imagenet"
-config.model_prefix = "resnext152"
-config.network = "resnext_cyt"
-config.depth = 152
+config.model_prefix = "resnet50"
+config.network = "resnet"
+config.depth = 50
 config.model_load_prefix = config.model_prefix
 config.model_load_epoch = 0
 config.retrain = False
 
 # data
 config.data_dir = '/data/ILSVRC2012'
-config.batch_size = 16
+config.batch_size = 128
 config.batch_size *= len(config.gpu_list)
-config.kv_store = 'dist_sync_device'
+config.kv_store = 'device'
 
 # optimizer
-config.lr = 0.2
+config.lr = 0.1
 config.wd = 0.0001
 config.momentum = 0.9
 if config.dataset == "imagenet":
@@ -39,7 +39,7 @@ config.warm_epoch = 5
 config.image_shape = [3, 224, 224]
 config.benchmark = False
 config.num_group = 64
-config.data_type = 'float32'
+config.data_type = 'float16'
 
 
 
