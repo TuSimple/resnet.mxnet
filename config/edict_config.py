@@ -23,6 +23,7 @@ config.kv_store = 'device'
 config.lr = 0.1
 config.wd = 0.0001
 config.momentum = 0.9
+config.multi_precision = True
 if config.dataset == "imagenet":
     config.lr_step = [30, 60, 90]
 else:
@@ -32,7 +33,7 @@ config.begin_epoch = config.model_load_epoch if config.retrain else 0
 config.num_epoch = 100
 config.frequent = 20
 # for distributed training
-config.warmup = True
+config.warmup = False
 config.warmup_lr = 0.1
 config.warm_epoch = 5
 # set image_shape for io and network
@@ -40,6 +41,7 @@ config.image_shape = [3, 224, 224]
 config.benchmark = False
 config.num_group = 64
 config.data_type = 'float16'
+
 
 
 

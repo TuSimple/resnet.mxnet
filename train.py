@@ -86,11 +86,11 @@ def main(config):
                                               factor=config.lr_factor)
     else:
         lr_scheduler = None
-
     optimizer_params = {'learning_rate': config.lr,
                         'lr_scheduler': lr_scheduler,
                         'wd': config.wd,
-                        'momentum': config.momentum}
+                        'momentum': config.momentum,
+                        'multi_precision': config.multi_precision}
     optimizer = "nag"
     #optimizer = 'sgd'
     eval_metric = ['acc']
