@@ -89,8 +89,9 @@ def main(config):
     optimizer_params = {'learning_rate': config.lr,
                         'lr_scheduler': lr_scheduler,
                         'wd': config.wd,
-                        'momentum': config.momentum,
-                        'multi_precision': config.multi_precision}
+                        'momentum': config.momentum}
+    if config.data_type == 'float16':
+        optimizer_params.update({'multi_precision': config.multi_precision, 'rescale_grad': 1.0/config.grad_scale})
     optimizer = "nag"
     #optimizer = 'sgd'
     eval_metric = ['acc']

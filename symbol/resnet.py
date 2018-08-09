@@ -55,7 +55,7 @@ def residual_unit(data, num_filter, stride, dim_match, name, bottle_neck=True,
 
 
 def resnet(units, num_stage, filter_list, num_classes, data_type, bottle_neck=True,
-           bn_mom=0.9, workspace=512, memonger=False, num_group=None):
+           bn_mom=0.9, workspace=512, memonger=False, num_group=None, grad_scale=1.0):
     num_unit = len(units)
     assert (num_unit == num_stage)
 
@@ -85,5 +85,7 @@ def resnet(units, num_stage, filter_list, num_classes, data_type, bottle_neck=Tr
     fc1 = mx.symbol.FullyConnected(data=flat, num_hidden=num_classes, name='fc1')
     if data_type == 'float16':
         fc1 = mx.sym.Cast(data=fc1, dtype=np.float32)
-    cls = mx.symbol.SoftmaxOutput(data=fc1, name='softmax')
+        cls = mx.symbol.SoftmaxOutput(data=fc1, name='softmax', grad_scale=grad_scale)
+    else:
+        cls = mx.symbol.SoftmaxOutput(data=fc1, name='softmax')
     return cls

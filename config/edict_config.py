@@ -41,6 +41,8 @@ config.image_shape = [3, 224, 224]
 config.benchmark = False
 config.num_group = 64
 config.data_type = 'float16'
+config.grad_scale = 128.0
+config.data_nthreads = 16
 
 
 

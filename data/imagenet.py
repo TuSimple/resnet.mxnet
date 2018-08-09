@@ -77,7 +77,7 @@ def imagenet_iterator(data_dir, batch_size, kv, image_shape):
             rand_mirror         = True,
             shuffle             = True,
             shuffle_chunk_size  = 4096,
-            preprocess_threads  = 8,
+            preprocess_threads  = config.data_nthreads,
             prefetch_buffer     = 16,
             num_parts           = kv.num_workers,
             part_index          = kv.rank)
