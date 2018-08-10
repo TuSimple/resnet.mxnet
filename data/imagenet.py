@@ -100,6 +100,7 @@ def imagenet_iterator(data_dir, batch_size, kv, image_shape):
             inter_method        = 2,
             rand_crop           = False,
             rand_mirror         = False,
+            preprocess_threads  = 8,
             num_parts           = kv.num_workers,
             part_index          = kv.rank)
 
