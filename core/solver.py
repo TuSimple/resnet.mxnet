@@ -117,7 +117,12 @@ class Solver(object):
                 # ndarray.waitall()
                 get_data_time.update(time.time() - start_time)
 
-                self.module.update_metric(eval_metric, data_batch.label)
+                if isinstance(data_batch, list):
+                    self.module.update_metric(eval_metric,
+                                       [db.label for db in data_batch],
+                                       pre_sliced=True)
+                else:
+                    self.module.update_metric(eval_metric, data_batch.label)
 
                 # ndarray.waitall()
                 iter_total_time.update(time.time() - start_time)

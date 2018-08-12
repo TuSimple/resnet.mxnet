@@ -39,10 +39,23 @@ def main(config):
 
     # set up iterator and symbol
     # iterator
-    train, val, num_examples = imagenet_iterator(data_dir=config.data_dir,
+    if config.use_multiple_iter is True:
+        train, val, num_examples = multiple_imagenet_iterator(data_dir=config.data_dir,
+                                                    batch_size=config.batch_size,
+                                                    num_parts=2,
+                                                    image_shape=tuple(config.image_shape),
+                                                    data_nthread=config.data_nthreads)
+    elif config.use_dali_iter is True:
+        train, val, num_examples = get_dali_iter(data_dir=config.data_dir,
                                                  batch_size=config.batch_size,
                                                  kv=kv,
-                                                 image_shape=tuple(config.image_shape))
+                                                 image_shape=tuple(config.image_shape),
+                                                 num_gpus=len(devs))
+    else:
+        train, val, num_examples = imagenet_iterator(data_dir=config.data_dir,
+                                                     batch_size=config.batch_size,
+                                                     kv=kv,
+                                                     image_shape=tuple(config.image_shape))
     print train
     print val
     data_names = ('data',)
@@ -65,7 +78,8 @@ def main(config):
 
     # train
     epoch_size = max(int(num_examples / config.batch_size / kv.num_workers), 1)
-    if 'dist' in config.kv_store and not 'async' in config.kv_store:
+    if 'dist' in config.kv_store and not 'async' in config.kv_store \
+            and config.use_multiple_iter is False and config.use_dali_iter is False:
         logging.info('Resizing training data to %d batches per machine', epoch_size)
         # resize train iter to ensure each machine has same number of batches per epoch
         # if not, dist_sync can hang at the end with one machine waiting for other machines

@@ -4,7 +4,7 @@ config = edict()
 
 # mxnet version: https://github.com/huangzehao/incubator-mxnet-bk
 config.mxnet_path = '../mxnet/python/'
-config.gpu_list = [2, 3]
+config.gpu_list = [0, 1, 2]
 config.dataset = "imagenet"
 config.model_prefix = "resnet50"
 config.network = "resnet"
@@ -43,6 +43,9 @@ config.num_group = 64
 config.data_type = 'float16'
 config.grad_scale = 128.0
 config.data_nthreads = 16
+config.use_multiple_iter = True
+config.use_dali_iter = False
+
 
 
 
