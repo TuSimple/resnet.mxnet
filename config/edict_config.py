@@ -43,7 +43,7 @@ config.num_group = 64
 config.data_type = 'float16'
 config.grad_scale = 128.0
 config.data_nthreads = 16
-config.use_multiple_iter = True
+config.use_multiple_iter = False
 config.use_dali_iter = False
 
 
