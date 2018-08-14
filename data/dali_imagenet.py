@@ -34,7 +34,8 @@ class  HybridValPipe (Pipeline):
         self.input = ops.MXNetReader(path=[os.path.join(db_folder, "val.rec")], index_path=[os.path.join(db_folder, "val.idx")],
                                      random_shuffle=False, shard_id=device_id, num_shards=num_gpus)
         self.decode = ops.nvJPEGDecoder(device="mixed", output_type=types.RGB)
-        self.rs = ops.Resize(device="gpu", resize_a=256, resize_b=256)
+        # self.rs = ops.Resize(device="gpu", resize_x=256, resize_y=256)
+        self.rrc = ops.RandomResizedCrop(device="gpu", size=(224, 224))
         self.cmnp = ops.CropMirrorNormalize(device="gpu",
                                             output_dtype=types.FLOAT,
                                             output_layout=types.NCHW,
@@ -46,15 +47,16 @@ class  HybridValPipe (Pipeline):
     def define_graph(self):
         self.jpegs, self.labels = self.input(name="Reader")
         images = self.decode(self.jpegs)
-        images = self.rs(images)
+        # images = self.rs(images)
+        images = self.rrc(images)
         output = self.cmnp(images)
         return [output, self.labels]
 
 
 def get_dali_iter(data_dir, batch_size, kv, image_shape, num_gpus):
     num_examples = 1281167
-    trainpipes = [HybridTrainPipe(batch_size=batch_size, num_threads=2, device_id=i, num_gpus=num_gpus, db_folder=data_dir) for i in range(num_gpus)]
-    valpipes = [HybridValPipe(batch_size=batch_size, num_threads=2, device_id=i, num_gpus=num_gpus, db_folder=data_dir) for i in range(num_gpus)]
+    trainpipes = [HybridTrainPipe(batch_size=batch_size//num_gpus, num_threads=2, device_id=i, num_gpus=num_gpus, db_folder=data_dir) for i in range(num_gpus)]
+    valpipes = [HybridValPipe(batch_size=batch_size//num_gpus, num_threads=2, device_id=i, num_gpus=num_gpus, db_folder=data_dir) for i in range(num_gpus)]
 
     trainpipes[0].build()
     valpipes[0].build()

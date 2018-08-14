@@ -4,7 +4,7 @@ config = edict()
 
 # mxnet version: https://github.com/huangzehao/incubator-mxnet-bk
 config.mxnet_path = '../mxnet/python/'
-config.gpu_list = [0, 1, 2]
+config.gpu_list = [0, 1, 2, 3]
 config.dataset = "imagenet"
 config.model_prefix = "resnet50"
 config.network = "resnet"
@@ -14,7 +14,7 @@ config.model_load_epoch = 0
 config.retrain = False
 
 # data
-config.data_dir = '/data/ILSVRC2012'
+config.data_dir = '/data/ILSVRC2012/'
 config.batch_size = 128
 config.batch_size *= len(config.gpu_list)
 config.kv_store = 'device'
