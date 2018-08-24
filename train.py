@@ -63,7 +63,15 @@ def main(config):
     data_shapes = [('data', tuple([config.batch_size] + config.image_shape))]
     label_shapes = [('softmax_label', (config.batch_size,))]
 
-    if config.network == 'resnet' :
+    if config.network == 'resnet':
+        symbol = eval(config.network)(units=config.units,
+                                      num_stage=config.num_stage,
+                                      filter_list=config.filter_list,
+                                      num_classes=config.num_classes,
+                                      data_type=config.data_type,
+                                      bottle_neck=config.bottle_neck,
+                                      grad_scale=config.grad_scale)
+    elif config.network == 'resnet_mxnet':
         symbol = eval(config.network)(units=config.units,
                                       num_stage=config.num_stage,
                                       filter_list=config.filter_list,
@@ -114,8 +122,8 @@ def main(config):
                         'momentum': config.momentum}
     if config.data_type == 'float16':
         optimizer_params.update({'multi_precision': config.multi_precision, 'rescale_grad': 1.0/config.grad_scale})
-    optimizer = "nag"
-    #optimizer = 'sgd'
+    #optimizer = "nag"
+    optimizer = 'sgd'
     eval_metric = ['acc']
     if config.dataset == "imagenet":
         eval_metric.append(mx.metric.create('top_k_accuracy', top_k=5))
@@ -128,8 +136,8 @@ def main(config):
                     logger=logging,
                     context=devs)
     epoch_end_callback = mx.callback.do_checkpoint("./model/" + config.model_prefix)
-    # batch_end_callback = mx.callback.Speedometer(config.batch_size, config.frequent)
-    batch_end_callback = DetailSpeedometer(config.batch_size, config.frequent)
+    batch_end_callback = mx.callback.Speedometer(config.batch_size, config.frequent)
+    # batch_end_callback = DetailSpeedometer(config.batch_size, config.frequent)
     initializer = mx.init.Xavier(rnd_type='gaussian', factor_type='in', magnitude=2)
     arg_params = None
     aux_params = None
