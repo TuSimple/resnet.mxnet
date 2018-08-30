@@ -45,12 +45,12 @@ def main(config):
                                                     num_parts=2,
                                                     image_shape=tuple(config.image_shape),
                                                     data_nthread=config.data_nthreads)
-    elif config.use_dali_iter is True:
-        train, val, num_examples = get_dali_iter(data_dir=config.data_dir,
-                                                 batch_size=config.batch_size,
-                                                 kv=kv,
-                                                 image_shape=tuple(config.image_shape),
-                                                 num_gpus=len(devs))
+    # elif config.use_dali_iter is True:
+    #     train, val, num_examples = get_dali_iter(data_dir=config.data_dir,
+    #                                              batch_size=config.batch_size,
+    #                                              kv=kv,
+    #                                              image_shape=tuple(config.image_shape),
+    #                                              num_gpus=len(devs))
     else:
         train, val, num_examples = imagenet_iterator(data_dir=config.data_dir,
                                                      batch_size=config.batch_size,
