@@ -106,9 +106,16 @@ def main(config):
         lr_epoch_diff = [epoch - config.begin_epoch for epoch in lr_epoch if epoch > config.begin_epoch]
         lr = config.lr * (config.lr_factor ** (len(lr_epoch) - len(lr_epoch_diff)))
         lr_iters = [int(epoch * epoch_size) for epoch in lr_epoch_diff]
-        print 'lr', lr, 'lr_epoch_diff', lr_epoch_diff, 'lr_iters', lr_iters
         print 'warmup lr', config.warmup_lr, 'warm_epoch', config.warm_epoch, 'warm_step', int(config.warm_epoch * epoch_size)
-        lr_scheduler = WarmupMultiFactorScheduler(base_lr=lr, step=lr_iters, factor=config.lr_factor,
+
+        if config.lr_scheduler == 'Poly':
+            print 'PolyScheduler lr', lr
+            lr_scheduler = mx.lr_scheduler.PolyScheduler(lr_iters, base_lr=lr, pwr=2, final_lr=0,
+                                                         warmup_steps=int(config.warm_epoch * epoch_size),
+                                                         warmup_begin_lr=0, warmup_mode='linear')
+        else:
+            print 'WarmupMultiFactorScheduler lr', lr, 'lr_epoch_diff', lr_epoch_diff, 'lr_iters', lr_iters
+            lr_scheduler = WarmupMultiFactorScheduler(base_lr=lr, step=lr_iters, factor=config.lr_factor,
                                                   warmup=True, warmup_type='gradual',
                                                   warmup_lr=config.warmup_lr, warmup_step=int(config.warm_epoch * epoch_size))
     elif config.lr_step is not None:
@@ -122,8 +129,10 @@ def main(config):
                         'momentum': config.momentum}
     if config.data_type == 'float16':
         optimizer_params.update({'multi_precision': config.multi_precision, 'rescale_grad': 1.0/config.grad_scale})
-    #optimizer = "nag"
-    optimizer = 'sgd'
+    if config.optimizer is not None:
+        optimizer = config.optimizer
+    else:
+        optimizer = 'sgd'
     eval_metric = ['acc']
     if config.dataset == "imagenet":
         eval_metric.append(mx.metric.create('top_k_accuracy', top_k=5))

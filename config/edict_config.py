@@ -17,10 +17,10 @@ config.retrain = False
 config.data_dir = '/data2/ILSVRC2012'
 config.batch_size = 64
 config.batch_size *= len(config.gpu_list)
-config.kv_store = 'device'
+config.kv_store = 'dist_sync'
 
 # optimizer
-config.lr = 0.2
+config.lr = 3.2
 config.wd = 0.0001
 config.momentum = 0.9
 config.multi_precision = True
@@ -33,9 +33,11 @@ config.begin_epoch = config.model_load_epoch if config.retrain else 0
 config.num_epoch = 100
 config.frequent = 20
 # for distributed training
-config.warmup = False
+config.warmup = True
 config.warmup_lr = 0.1
 config.warm_epoch = 5
+config.lr_scheduler = 'WarmupMultiFactor'
+config.optimizer = 'sgd'
 # set image_shape for io and network
 config.image_shape = [3, 224, 224]
 config.benchmark = False
