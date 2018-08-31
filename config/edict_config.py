@@ -37,13 +37,13 @@ config.warmup = True
 config.warmup_lr = 0.1
 config.warm_epoch = 5
 config.lr_scheduler = 'poly'
-config.optimizer = 'lbsgd'
+config.optimizer = 'sgd'
 # set image_shape for io and network
 config.image_shape = [3, 224, 224]
 config.benchmark = False
 config.num_group = 64
 config.data_type = 'float32'
-config.grad_scale = 128.0
+config.grad_scale = 1.0
 config.data_nthreads = 16
 config.use_multiple_iter = False
 config.use_dali_iter = False

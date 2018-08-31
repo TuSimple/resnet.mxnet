@@ -1,5 +1,5 @@
 import logging, os
-
+import argparse
 # import config
 from config.edict_config import config
 import mxnet as mx
@@ -9,7 +9,7 @@ from core.memonger_v2 import search_plan_to_layer
 from core.callback import DetailSpeedometer
 from data import *
 from symbol import *
-
+import datetime
 import pprint
 from core.scheduler import WarmupMultiFactorScheduler
 
@@ -197,7 +197,63 @@ def main(config):
                num_epoch=config.num_epoch,
                kvstore=kv)
 
+def parse_args():
+    parser = argparse.ArgumentParser(description='Train Faster R-CNN network')
+    # general
+    parser.add_argument('--network', help='network name', default=config.network, type=str)
+    parser.add_argument('--dataset', help='dataset name', default=config.dataset, type=str)
+    parser.add_argument('--dataset_dir', help='dataset path', default=config.dataset_dir, type=str)
+    # training
+    parser.add_argument('--frequent', help='frequency of logging', default=config.frequent, type=int)
+    parser.add_argument('--kv_store', help='the kv-store type', default=config.kv_store, type=str)
+    parser.add_argument('--resume', help='continue training', action='store_true')
+    parser.add_argument('--gpus', help='GPU device to train with', default='-1', type=str)
+    parser.add_argument('--model_prefix', help='pretrained model prefix', default=config.model_prefix, type=str)
+    parser.add_argument('--model_load_epoch', help='pretrained model epoch', default=config.model_load_epoch, type=int)
+    parser.add_argument('--begin_epoch', help='begin epoch of training, use with resume', default=config.begin_epoch, type=int)
+    parser.add_argument('--num_epoch', help='end epoch of training', default=config.num_epoch, type=int)
+    parser.add_argument('--lr', help='base learning rate', default=config.lr, type=float)
+    parser.add_argument('--lr_scheduler', help='lr scheduler', default=config.lr_scheduler, type=str)
+    parser.add_argument('--optimizer', help='optimizer', default=config.optimizer, type=str)
+    parser.add_argument('--data_type', help='data type', default=config.data_type, type=str)
+    parser.add_argument('--grad_scale', help='grad scale for fp16', default=config.grad_scale, type=float)
+    parser.add_argument('--batch_per_gpu', help='batch size per gpu', default=config.batch_per_gpu, type=int)
+    # memory
+    parser.add_argument('--memonger', help='use memonger to put more images on a single GPU', default=config.memonger, type=int)
+    args = parser.parse_args()
+    return args
+
+def set_config(args):
+    config.network = args.network
+    config.dataset = args.dataset
+    config.dataset_dir = args.dataset_dir
+    config.frequent = args.frequent
+    config.kv_store = args.kv_store
+    if args.resume:
+        config.retrain = True
+    if args.gpus != '-1':
+        config.gpu_list = [mx.gpu(int(devs_id)) for devs_id in args.gpus.split(',')]
+    config.model_prefix = args.model_prefix
+    config.model_load_epoch = args.model_load_epoch
+    config.begin_epoch = args.begin_epoch
+    config.num_epoch = args.num_epoch
+    config.lr = args.lr
+    config.lr_scheduler = args.lr_scheduler
+    config.optimizer = args.optimizer
+    config.data_type = args.data_type
+    config.grad_scale = args.grad_scale
+    config.batch_per_gpu = args.batch_per_gpu
+    config.batch_size = config.batch_per_gpu * len(config.gpu_list)
+    config.memonger = args.memonger
+
 
 if __name__ == '__main__':
+    args = parse_args()
+    print 'Called with argument:', args
+    now = datetime.datetime.now()
+    date = '{}_{:0>2}_{:0>2}'.format(now.year, now.month, now.day)
+
+    set_config(args)
+
     pprint.pprint(config)
     main(config)
