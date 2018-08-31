@@ -14,10 +14,10 @@ config.model_load_epoch = 0
 config.retrain = False
 
 # data
-config.data_dir = '/data2/ILSVRC2012'
-config.batch_size = 64
-config.batch_size *= len(config.gpu_list)
-config.kv_store = 'dist_sync'
+config.data_dir = '/data/ILSVRC2012'
+config.batch_per_gpu = 64
+config.batch_size = config.batch_per_gpu * len(config.gpu_list)
+config.kv_store = 'local'
 
 # optimizer
 config.lr = 3.2
@@ -47,6 +47,7 @@ config.grad_scale = 128.0
 config.data_nthreads = 16
 config.use_multiple_iter = False
 config.use_dali_iter = False
+config.memonger = False
 
 
 

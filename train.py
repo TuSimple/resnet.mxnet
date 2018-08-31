@@ -5,6 +5,7 @@ from config.edict_config import config
 import mxnet as mx
 from core.scheduler import multi_factor_scheduler
 from core.solver import Solver
+from core.memonger_v2 import search_plan_to_layer
 from core.callback import DetailSpeedometer
 from data import *
 from symbol import *
@@ -70,7 +71,8 @@ def main(config):
                                       num_classes=config.num_classes,
                                       data_type=config.data_type,
                                       bottle_neck=config.bottle_neck,
-                                      grad_scale=config.grad_scale)
+                                      grad_scale=config.grad_scale,
+                                      memonger=config.memonger)
     elif config.network == 'resnet_mxnet':
         symbol = eval(config.network)(units=config.units,
                                       num_stage=config.num_stage,
@@ -91,6 +93,24 @@ def main(config):
         symbol = eval(config.network)(num_classes=config.num_classes)
 
     # mx.viz.print_summary(symbol, {'data': (1, 3, 224, 224)})
+
+    # memonger
+    if config.memonger:
+        # infer shape
+        data_shape_dict = dict(train.provide_data + train.provide_label)
+        per_gpu_data_shape_dict = {}
+        for key in data_shape_dict:
+            per_gpu_data_shape_dict[key] = (config.batch_per_gpu,) + data_shape_dict[key][1:]
+
+        # if config.network == 'resnet':
+        #     last_block = 'conv3_1_relu'
+        #     if kv.rank == 0:
+        #         print("resnet do memonger up to {}".format(last_block))
+        # else:
+        #     last_block = None
+        last_block = 'stage4_unit1_sc'
+        input_dtype = {k: 'float32' for k in per_gpu_data_shape_dict}
+        symbol = search_plan_to_layer(symbol, last_block, 1000, type_dict=input_dtype, **per_gpu_data_shape_dict)
 
     # train
     epoch_size = max(int(num_examples / config.batch_size / kv.num_workers), 1)
