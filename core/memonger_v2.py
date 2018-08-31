@@ -112,10 +112,6 @@ def get_cost(sym, type_dict=None, **kwargs):
     sym : Symbolic Variable
 
     """
-    # texec = sym.simple_bind(ctx=mx.gpu(7),
-    #                         grad_req='write',
-    #                         type_dict=type_dict,
-    #                         **kwargs)
     texec = sym.simple_bind(ctx=mx.cpu(),
                             grad_req='write',
                             type_dict=type_dict,
