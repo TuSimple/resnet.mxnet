@@ -108,7 +108,7 @@ def main(config):
         lr_iters = [int(epoch * epoch_size) for epoch in lr_epoch_diff]
         print 'warmup lr', config.warmup_lr, 'warm_epoch', config.warm_epoch, 'warm_step', int(config.warm_epoch * epoch_size)
 
-        if config.lr_scheduler == 'Poly':
+        if config.lr_scheduler == 'poly':
             print 'PolyScheduler lr', lr
             lr_scheduler = mx.lr_scheduler.PolyScheduler(int(epoch_size*config.num_epoch), base_lr=lr, pwr=2, final_lr=0,
                                                          warmup_steps=int(config.warm_epoch * epoch_size),
@@ -123,16 +123,26 @@ def main(config):
                                               factor=config.lr_factor)
     else:
         lr_scheduler = None
-    optimizer_params = {'learning_rate': config.lr,
-                        'lr_scheduler': lr_scheduler,
-                        'wd': config.wd,
-                        'momentum': config.momentum}
-    if config.data_type == 'float16':
-        optimizer_params.update({'multi_precision': config.multi_precision, 'rescale_grad': 1.0/config.grad_scale})
-    if config.optimizer is not None:
-        optimizer = config.optimizer
-    else:
-        optimizer = 'sgd'
+
+    optimizer_params = {
+        'learning_rate': lr,
+        'wd': config.wd,
+        'lr_scheduler': lr_scheduler,
+        'multi_precision': config.multi_precision}
+    # Only a limited number of optimizers have 'momentum' property
+    has_momentum = {'sgd', 'dcasgd', 'nag', 'signum', 'lbsgd'}
+    if config.optimizer in has_momentum:
+        optimizer_params['momentum'] = config.momentum
+    # A limited number of optimizers have a warmup period
+    has_warmup = {'lbsgd', 'lbnag'}
+    if config.optimizer in has_warmup:
+        optimizer_params['updates_per_epoch'] = epoch_size
+        optimizer_params['begin_epoch'] = config.begin_epoch
+        optimizer_params['batch_scale'] = 1.0
+        optimizer_params['warmup_strategy'] = 'lars'
+        optimizer_params['warmup_epochs'] = config.warm_epoch # not work whne warmup_strategy is 'lars'
+        optimizer_params['num_epochs'] = config.num_epoch
+
     eval_metric = ['acc']
     if config.dataset == "imagenet":
         eval_metric.append(mx.metric.create('top_k_accuracy', top_k=5))
@@ -161,7 +171,7 @@ def main(config):
                initializer=initializer,
                arg_params=arg_params,
                aux_params=aux_params,
-               optimizer=optimizer,
+               optimizer=config.optimizer,
                optimizer_params=optimizer_params,
                begin_epoch=config.begin_epoch,
                num_epoch=config.num_epoch,
