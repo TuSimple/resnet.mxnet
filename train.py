@@ -202,7 +202,7 @@ def parse_args():
     # general
     parser.add_argument('--network', help='network name', default=config.network, type=str)
     parser.add_argument('--dataset', help='dataset name', default=config.dataset, type=str)
-    parser.add_argument('--dataset_dir', help='dataset path', default=config.dataset_dir, type=str)
+    parser.add_argument('--data_dir', help='dataset path', default=config.data_dir, type=str)
     # training
     parser.add_argument('--frequent', help='frequency of logging', default=config.frequent, type=int)
     parser.add_argument('--kv_store', help='the kv-store type', default=config.kv_store, type=str)
@@ -226,13 +226,13 @@ def parse_args():
 def set_config(args):
     config.network = args.network
     config.dataset = args.dataset
-    config.dataset_dir = args.dataset_dir
+    config.data_dir = args.data_dir
     config.frequent = args.frequent
     config.kv_store = args.kv_store
     if args.resume:
         config.retrain = True
     if args.gpus != '-1':
-        config.gpu_list = [mx.gpu(int(devs_id)) for devs_id in args.gpus.split(',')]
+        config.gpu_list = [int(devs_id) for devs_id in args.gpus.split(',')]
     config.model_prefix = args.model_prefix
     config.model_load_epoch = args.model_load_epoch
     config.begin_epoch = args.begin_epoch
