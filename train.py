@@ -110,7 +110,7 @@ def main(config):
 
         if config.lr_scheduler == 'Poly':
             print 'PolyScheduler lr', lr
-            lr_scheduler = mx.lr_scheduler.PolyScheduler(lr_iters, base_lr=lr, pwr=2, final_lr=0,
+            lr_scheduler = mx.lr_scheduler.PolyScheduler(int(epoch_size*config.num_epoch), base_lr=lr, pwr=2, final_lr=0,
                                                          warmup_steps=int(config.warm_epoch * epoch_size),
                                                          warmup_begin_lr=0, warmup_mode='linear')
         else:

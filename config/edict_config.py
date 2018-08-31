@@ -36,7 +36,7 @@ config.frequent = 20
 config.warmup = True
 config.warmup_lr = 0.1
 config.warm_epoch = 5
-config.lr_scheduler = 'WarmupMultiFactor'
+config.lr_scheduler = 'Poly'
 config.optimizer = 'sgd'
 # set image_shape for io and network
 config.image_shape = [3, 224, 224]
