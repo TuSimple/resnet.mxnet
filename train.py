@@ -162,6 +162,10 @@ def main(config):
         optimizer_params['warmup_strategy'] = 'lars'
         optimizer_params['warmup_epochs'] = config.warm_epoch # not work whne warmup_strategy is 'lars'
         optimizer_params['num_epochs'] = config.num_epoch
+        optimizer_params['eta'] = config.lars_eta
+    # added by cxt for debug optimizer
+    if config.isdebug and kv.rank == 0:
+        optimizer_params['isdebug'] = True
 
     eval_metric = ['acc']
     if config.dataset == "imagenet":
@@ -220,6 +224,8 @@ def parse_args():
     parser.add_argument('--batch_per_gpu', help='batch size per gpu', default=config.batch_per_gpu, type=int)
     # memory
     parser.add_argument('--memonger', help='use memonger to put more images on a single GPU', default=config.memonger, type=int)
+    parser.add_argument('--lars_eta', help='lars eta', default=config.lars_eta, type=float)
+    parser.add_argument('--isdebug', help='debug to check lars', default=config.isdebug, type=int)
     args = parser.parse_args()
     return args
 
@@ -245,6 +251,8 @@ def set_config(args):
     config.batch_per_gpu = args.batch_per_gpu
     config.batch_size = config.batch_per_gpu * len(config.gpu_list)
     config.memonger = args.memonger
+    config.lars_eta = args.lars_eta
+    config.isdebug = args.isdebug
 
 
 if __name__ == '__main__':
