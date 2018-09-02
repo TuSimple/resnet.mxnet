@@ -164,7 +164,7 @@ def main(config):
         optimizer_params['num_epochs'] = config.num_epoch
         optimizer_params['eta'] = config.lars_eta
     # added by cxt for debug optimizer
-    if config.isdebug and kv.rank == 0:
+    if config.isdebug:
         optimizer_params['isdebug'] = True
 
     eval_metric = ['acc']
