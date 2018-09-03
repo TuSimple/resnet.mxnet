@@ -166,6 +166,9 @@ def main(config):
     # added by cxt for debug optimizer
     if config.isdebug:
         optimizer_params['isdebug'] = True
+    if config.optimizer == 'sgd' and config.islars:
+        optimizer_params['islars'] = True
+        optimizer_params['lars_eta'] = config.lars_eta
 
     eval_metric = ['acc']
     if config.dataset == "imagenet":
@@ -226,6 +229,7 @@ def parse_args():
     parser.add_argument('--memonger', help='use memonger to put more images on a single GPU', default=config.memonger, type=int)
     parser.add_argument('--lars_eta', help='lars eta', default=config.lars_eta, type=float)
     parser.add_argument('--isdebug', help='debug to check lars', default=config.isdebug, type=int)
+    parser.add_argument('--islars', help='do lars', default=config.islars, type=int)
     args = parser.parse_args()
     return args
 
@@ -253,6 +257,7 @@ def set_config(args):
     config.memonger = args.memonger
     config.lars_eta = args.lars_eta
     config.isdebug = args.isdebug
+    config.islars = args.islars
 
 
 if __name__ == '__main__':

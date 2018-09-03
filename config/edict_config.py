@@ -38,7 +38,8 @@ config.warmup_lr = 0.1
 config.warm_epoch = 5
 config.lr_scheduler = 'poly'
 config.optimizer = 'sgd'
-config.lars_eta = '1.0'
+config.islars = 0
+config.lars_eta = 1.0
 config.isdebug = 0
 # set image_shape for io and network
 config.image_shape = [3, 224, 224]
